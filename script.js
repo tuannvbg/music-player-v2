@@ -13,17 +13,18 @@ var isDrawerOpen = false,
     drawerSongDuration,
     drawerBar,
     dawerProgress,
-    korean=false,
+    isKorean=false,
+    typeChange=false,
     baseUrl = "https://abdul-moqueet.github.io/music-player/",
     accentColorAr = [
-        '#ff6f62',
+        '#ff4b66',
         '#62ff6e',
         '#ffb762',
         '#3444ff',
         '#16e0aa',
-        '#ff4b66',
         '#8f1fff',
-        '#70de00'
+        '#70de00',
+        '#000000'
     ];
 
 var songs, english = [
@@ -67,7 +68,7 @@ var songs, english = [
         url:"songs/Sing_Me_To_Sleep.mp3",
         albumArt:"images/Sing_Me_To_Sleep.jpg"
     },
-    
+
     {
         name:"Ignite",
         singer:"Alan Walker",
@@ -157,6 +158,97 @@ var songs, english = [
     }
 ];
 
+var korean = [
+
+    {
+        name:"Kill This Love",
+        singer:"BlackPink",
+        duration:"03:13",
+        url:"k-pop/Kill_This_Love.mp3",
+        albumArt:"k-pop/Kill_This_Love.jpg"
+    },
+
+    {
+        name:"Boy With Luv",
+        singer:"BTS Feat. Halsey",
+        duration:"04:12",
+        url:"k-pop/Boy_With_Luv.mp3",
+        albumArt:"k-pop/Boy_With_Luv.jpg"
+    },
+
+    {
+        name:"Fake Love",
+        singer:"BTS",
+        duration:"04:02",
+        url:"k-pop/Fake_Love.mp3",
+        albumArt:"k-pop/Fake_Love.jpg"
+    },
+
+    {
+        name:"Blood Sweat & Tears",
+        singer:"BTS",
+        duration:"06:03",
+        url:"k-pop/Blood_Sweat_And_Tears.mp3",
+        albumArt:"k-pop/Blood_Sweat_And_Tears.jpg"
+    },
+
+    {
+        name:"FANCY",
+        singer:"Twice",
+        duration:"03:38",
+        url:"k-pop/FANCY.mp3",
+        albumArt:"k-pop/FANCY.jpg"
+    },
+
+    {
+        name:"Not Today",
+        singer:"BTS",
+        duration:"04:50",
+        url:"k-pop/Not_Today.mp3",
+        albumArt:"k-pop/Not_Today.jpg"
+    },
+
+    {
+        name:"Ddu-Du Ddu-Du",
+        singer:"BlackPink",
+        duration:"03:33",
+        url:"k-pop/Ddu-Du_Ddu-Du.mp3",
+        albumArt:"k-pop/Ddu-Du_Ddu-Du.jpg"
+    },
+
+    {
+        name:"Feel Special",
+        singer:"Twice",
+        duration:"03:40",
+        url:"k-pop/Feel_Special.mp3",
+        albumArt:"k-pop/Feel_Special.jpg"
+    },
+
+    {
+        name:"Whistle",
+        singer:"BlackPink",
+        duration:"03:34",
+        url:"k-pop/Whistle.mp3",
+        albumArt:"k-pop/Whistle.jpg"
+    },
+
+    {
+        name:"Save ME",
+        singer:"BTS",
+        duration:"03:36",
+        url:"k-pop/Save_ME.mp3",
+        albumArt:"k-pop/Save_ME.jpg"
+    },
+
+    {
+        name:"",
+        singer:"",
+        duration:"",
+        url:"",
+        albumArt:""
+    }
+];
+
 var currentProfile = {
     name:"",
     singer:"",
@@ -168,6 +260,12 @@ var currentProfile = {
 };
 
 window.onload = function(){
+
+    mediaPlayer = document.getElementById('media-player'),
+        audioSource = document.getElementById('audio-source');
+    
+    document.getElementById("loading").style.display="none";
+
     mediaPlayer.addEventListener("progress", function() {
         if(isReady)
             bufferingStats.style.opacity=1;
@@ -188,6 +286,13 @@ window.onload = function(){
         $('#play-btn').text('play_arrow');
         $('#drawerPlay').text('play_arrow');
     });
+
+    document.getElementById("toast")
+        .addEventListener("webkitAnimationEnd", function(){
+        toast.style.animation="none";
+    });
+    
+    setRandomTheme();
 
 };
 
@@ -271,21 +376,49 @@ $(document).ready(function(){
         }
     }
 
+    $("#favorite").click(function(){
+        if(this.textContent=='favorite')
+            this.textContent='favorite_border';
+        else{
+            this.textContent='favorite';
+            showToast("Favorited");
+        }
+    });
+
+    $("#repeat").click(function(){
+        if(this.textContent=='repeat'){
+            this.textContent='repeat_one';
+            showToast("Repeat One");
+        }else{
+            this.textContent='repeat';
+            showToast("Repeat All");
+        }
+
+    });
+
 });
 
 function changeTheme(id){
+
     document.documentElement.style.setProperty('--accent-color', accentColorAr[id]);
     currentProfile.accentColor = accentColorAr[id];
+    if(id==7){
+        currentProfile.accentColor = "#000000";
+        showToast("Expermental Dark");
+    }
     var card = document.getElementsByClassName('card');
     songListDuration[currentProfile.id].style.color = currentProfile.accentColor;
-    card[currentProfile.id].style.color = currentProfile.accentColor;
-    
-    if(korean){
+    if(id==7)
+        card[currentProfile.id].style.color = "#ffffff";
+    else
+        card[currentProfile.id].style.color = currentProfile.accentColor;
+
+    if(isKorean){
         $('.left-pannel__anime').css('color',currentProfile.accentColor);
     }else{
         $('.left-pannel__favorite').css('color',currentProfile.accentColor);
     }
-    
+
 }
 
 function navHandler(){
@@ -332,7 +465,7 @@ function drawerHandler(){
 
         $('.bottom-drawer').show();
         $('#drawerSongName').text(currentProfile.name);
-        $('#drawerSingerName').text(currentProfile.singer); // --> Firebase
+        $('#drawerSingerName').text(currentProfile.singer); 
         $('#songAlbumArt').css("background-image", "url("+baseUrl+currentProfile.albumArt + ")");
         $('.bottom-pannel .bottom__up-arrow').css('transform', 'rotate(180deg)');
         $('.drawer-holder').animate({height: "60vh"}, 1000, function(){
@@ -356,17 +489,21 @@ function drawerHandler(){
 
 }
 
-function generateElements(korean){
+function generateElements(ko){
 
     var cards = "", songList="";
-    this.korean = korean;
+
+    if(this.isKorean == ko)
+        typeChange=false;
+    else
+        typeChange=true;
 
     $('.cards-holder').html("");
     $('.list-view').html("");
 
-    if(korean){
-        songs = "";
-        $('.left-pannel__anime').text('_K-Pop');
+    if(ko){
+        songs = korean;
+        $('.left-pannel__anime').text('_K-POP');
         $('.left-pannel__anime').css('color',currentProfile.accentColor);
         $('.left-pannel__favorite').text('English');
         $('.left-pannel__favorite').css('color',"black");
@@ -374,7 +511,7 @@ function generateElements(korean){
         songs = english;
         $('.left-pannel__favorite').text('_English');
         $('.left-pannel__favorite').css('color',currentProfile.accentColor);
-        $('.left-pannel__anime').text('K-Pop');
+        $('.left-pannel__anime').text('K-POP');
         $('.left-pannel__anime').css('color',"black");
     }
 
@@ -416,6 +553,8 @@ function generateElements(korean){
 
     $('.list-view').html(songList);
 
+    this.isKorean = ko;
+
 }
 
 function playSong(songId, checkPause){
@@ -424,18 +563,20 @@ function playSong(songId, checkPause){
 
     if(checkPause == undefined)
         if(currentProfile.id == songId){
-            playPause();
-
             songListDuration[songId].style.color = currentProfile.accentColor;
             card[songId].style.color = currentProfile.accentColor;
-            return;
+            if(!typeChange){
+                playPause();
+                return;
+            }
         }
-
-    songListDuration[songId].style.color = currentProfile.accentColor;
-    songListDuration[currentProfile.id].style.color = "grey";
-    songListDuration[currentProfile.id].textContent = currentProfile.duration;
-    card[songId].style.color = currentProfile.accentColor;
-    card[currentProfile.id].style.color = "#ffffff";
+    if(currentProfile.id != songId){
+        songListDuration[songId].style.color = currentProfile.accentColor;
+        songListDuration[currentProfile.id].style.color = "grey";
+        songListDuration[currentProfile.id].textContent = currentProfile.duration;
+        card[songId].style.color = currentProfile.accentColor;
+        card[currentProfile.id].style.color = "#ffffff";
+    }
     setCurrentProfile(songId);
     audioSource.src = baseUrl+currentProfile.url;
     $("#bottomSongName").text(currentProfile.name);
@@ -467,6 +608,11 @@ function playPause(){
     card[currentProfile.id].style.color = currentProfile.accentColor;
 }
 
+window.onerror=function(){
+    console.error=null;
+    return true;
+};
+
 function nextSong(){
     var songId = 0;
     if(currentProfile.id == songs.length-2)
@@ -494,6 +640,13 @@ function prevSong(){
     $('#songAlbumArt').css("background-image", "url("+baseUrl+currentProfile.albumArt + ")");
 }
 
+function showToast(text){
+    var toast = document.getElementById("toast");
+    document.getElementById("toastText").textContent = text;
+    toast.style.animation = "fade 2s";
+    toast.style.anmationFillMode = "forwards";
+}
+
 function setCurrentProfile(id){
     currentProfile.id = id;
     currentProfile.name = songs[id].name;
@@ -501,4 +654,12 @@ function setCurrentProfile(id){
     currentProfile.duration = songs[id].duration;
     currentProfile.url = songs[id].url;
     currentProfile.albumArt = songs[id].albumArt;
+}
+
+function setRandomTheme(){
+    
+    changeTheme(getRandomNumber(7));
+    function getRandomNumber(limit) {
+        return Math.floor(Math.random() * limit);
+    }
 }
