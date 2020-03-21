@@ -1,11 +1,28 @@
 <!DOCTYPE html>
 
 <!--
-* Design Inspired By:
-* https://in.pinterest.com/pin/586171707737215905/
+* Design Inspired By: https://in.pinterest.com/pin/586171707737215905/
 *
-* Date of posting: 16-Feb-2020
-* Created by: Abdul Moqueet 
+* Date of posting: 21-Feb-2020
+* Created by: Abdul Moqueet
+*
+* --------------------------
+* Change Log Version 2.0
+* --------------------------
+* 1. Drawer Can Open Now. (Major Update)
+* 2. Added Next/Previous, Play/Pause button in the drawer (Major Update)
+* 3. Added Navigation Drawer with themes (Major Update)
+* 4. Added Separate K-Pop Section, Must Try (Major Update)
+* 5. Implemented Buffered bar which indicates if u can jump to a specific time stamp without any further Buffering (Minor Update)
+* 6. Random Themes on Every Boot (Minor Update)
+* 7. Bug Fixes & Overall performance boost (Minior Update)
+* 8. At Last, Added More Bugs to fix later xD
+* --------------------------
+* End Of Change log
+* --------------------------
+*
+* Minimum Requirement: Height 350px.
+*
 *
 -->
 
@@ -13,6 +30,10 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8">
         <title>Music Player | Abdul Moqueet</title>
+        <script>
+            console.log=function(){};
+            console.error=function(){};
+        </script>
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
         <link href="https://fonts.googleapis.com/css?family=Changa+One|Roboto&display=swap" rel="stylesheet">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -20,6 +41,14 @@
         <script src="script.js"></script>
     </head>
     <body>
+
+       <div id="loading">
+
+            <p class="loading-text">Loading . . .</p>
+            <p class="by">Music Player by:<br>Abdul Moqueet</p>
+
+        </div>
+
 
         <div class="main-container">
 
@@ -33,7 +62,7 @@
                 </div>
                 <div class="left-pannel__bottom">
                     <div class="left-pannel__favorite" onclick="generateElements(false);">_English</div>
-                    <div class="left-pannel__anime" onclick="generateElements(true);">K-Pop</div>
+                    <div class="left-pannel__anime" onclick="generateElements(true);">K-POP</div>
                 </div>
             </div>
 
@@ -143,11 +172,11 @@
                         </div>
 
                         <div class ="drawer__column4 column">
-                            <i class="material-icons icon">
-                                repeat
+                            <i class="material-icons icon" id="repeat">
+                                repeat_one
                             </i>
 
-                            <i class="material-icons icon">
+                            <i class="material-icons icon" id="favorite">
                                 favorite_border
                             </i>
 
@@ -166,6 +195,8 @@
 
         </div>
 
+        <div id="toast"><p id="toastText">Coming in next verison</p></div>
+        <div class="not-supported"><p>Sorry Minimum 350px Screen Height Required.</p></div>
 
         <audio id="media-player" preload loop>
             <source id="audio-source" src="https://abdul-moqueet.github.io/music-player/songs/End_Of_Time.mp3" type="audio/mpeg">
