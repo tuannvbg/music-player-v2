@@ -14,7 +14,6 @@ var isDrawerOpen = false,
     drawerBar,
     dawerProgress,
     isKorean=false,
-    typeChange=false,
     baseUrl = "https://abdul-moqueet.github.io/music-player/",
     accentColorAr = [
         '#ff4b66',
@@ -263,7 +262,7 @@ window.onload = function(){
 
     mediaPlayer = document.getElementById('media-player'),
         audioSource = document.getElementById('audio-source');
-    
+
     document.getElementById("loading").style.display="none";
 
     mediaPlayer.addEventListener("progress", function() {
@@ -291,7 +290,7 @@ window.onload = function(){
         .addEventListener("webkitAnimationEnd", function(){
         toast.style.animation="none";
     });
-    
+
     setRandomTheme();
 
 };
@@ -493,11 +492,6 @@ function generateElements(ko){
 
     var cards = "", songList="";
 
-    if(this.isKorean == ko)
-        typeChange=false;
-    else
-        typeChange=true;
-
     $('.cards-holder').html("");
     $('.list-view').html("");
 
@@ -562,13 +556,11 @@ function playSong(songId, checkPause){
     var card = document.getElementsByClassName('card');
 
     if(checkPause == undefined)
-        if(currentProfile.id == songId){
+        if(currentProfile.name == songs[songId].name){
             songListDuration[songId].style.color = currentProfile.accentColor;
             card[songId].style.color = currentProfile.accentColor;
-            if(!typeChange){
-                playPause();
-                return;
-            }
+            playPause();
+            return;
         }
     if(currentProfile.id != songId){
         songListDuration[songId].style.color = currentProfile.accentColor;
@@ -657,8 +649,9 @@ function setCurrentProfile(id){
 }
 
 function setRandomTheme(){
-    
+
     changeTheme(getRandomNumber(7));
+
     function getRandomNumber(limit) {
         return Math.floor(Math.random() * limit);
     }
