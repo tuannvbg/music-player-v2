@@ -14,7 +14,7 @@ var isDrawerOpen = false,
     drawerBar,
     dawerProgress,
     isKorean=false,
-    baseUrl = "https://abdul-moqueet.github.io/music-player/",
+    baseUrl = "https://abdulmoqueet.github.io/music-player/",
     accentColorAr = [
         '#ff4b66',
         '#62ff6e',
