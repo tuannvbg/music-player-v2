@@ -291,7 +291,7 @@ window.onload = function(){
         toast.style.animation="none";
     });
 
-    setRandomTheme();
+    changeTheme(0);
 
 };
 
@@ -646,13 +646,4 @@ function setCurrentProfile(id){
     currentProfile.duration = songs[id].duration;
     currentProfile.url = songs[id].url;
     currentProfile.albumArt = songs[id].albumArt;
-}
-
-function setRandomTheme(){
-
-    changeTheme(getRandomNumber(7));
-
-    function getRandomNumber(limit) {
-        return Math.floor(Math.random() * limit);
-    }
 }
