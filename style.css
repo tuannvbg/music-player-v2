@@ -17,9 +17,15 @@ body{
     background: #fff;
 }
 
+.main-container{
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+}
+
 #loading {
     position: absolute;
-    height: 100vh;
+    height: 100%;
     left: 0;
     right: 0;
     top: 0;
@@ -147,7 +153,7 @@ body{
 .nav-container{
     position: absolute;
     background: rgba(0, 0, 0, 0.5);
-    height: 100vh;
+    height: 100%;
     left: 0;
     right: 0;
     z-index: 2;
@@ -157,7 +163,7 @@ body{
 .nav{
     position: relative;
     background: #fff;
-    height: 100vh;
+    height: 100%;
     width: 0;
 }
 
@@ -461,7 +467,7 @@ body{
 
 .bottom-drawer{
     background: rgba(0, 0, 0, 0.6);
-    height: 100vh;
+    height: 100%;
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -791,7 +797,7 @@ transform: rotate(360deg);
 .not-supported{
     display: -webkit-box;
     display: -ms-flexbox;
-    height: 100vh;
+    height: 100%;
     -webkit-box-align: center;
         -ms-flex-align: center;
             align-items: center;

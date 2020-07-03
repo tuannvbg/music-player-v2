@@ -297,6 +297,8 @@ window.onload = function(){
 
 $(document).ready(function(){
 
+    $(".main-container").css("height",window.innerHeight+"px");
+
     generateElements(false);
     setCurrentProfile(0);
 
